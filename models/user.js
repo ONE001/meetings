@@ -1,6 +1,7 @@
 var crypto = require('crypto'),
 	mongoose = require('lib/mongoose'),
-	Schema = mongoose.Schema;
+	Schema = mongoose.Schema
+;
 
 var schema = new Schema({
 	login: {
