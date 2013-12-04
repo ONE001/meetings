@@ -9,6 +9,7 @@
     "express": "3.4.5",
     "nconf": "*",
     "mongoose": "*",
-    "connect-mongo": "*"
+    "connect-mongo": "*",
+    "async": "*"
   }
 }

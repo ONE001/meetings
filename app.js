@@ -9,17 +9,18 @@ var express = require('express'),
 ;
 
 app.set('views', path.join(__dirname, 'views'));
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(express.favicon());
 
-if (app.get('env') == 'development') {
+if (app.get('env') == 'development')
 	app.use(express.logger('dev'));
-} else {
+else
 	app.use(express.logger('default'));	
-}
 
 var MongoStore = require('connect-mongo')(express);
 
+app.use(express.bodyParser());
 app.use(express.cookieParser());
 app.use(express.session({
 	secret: config.get("session:secret"),
@@ -27,14 +28,13 @@ app.use(express.session({
 	cookie: config.get("session:cookie"),
 	store: new MongoStore({mongoose_connection: mongoose.connection}),
 }));
-app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(require('middleware/loadUser'));
+
+require('routes')(app);
 
 http.createServer(app).listen(config.get('port'), function() {
   console.log('Express server listening on port ' + config.get('port'));
-});
-
-app.use(function(req, res, next) {
-	res.sendfile('views/index.html');
 });
 
 app.use(function(err, req, res, next) {
