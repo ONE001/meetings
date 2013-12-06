@@ -2,6 +2,8 @@ var express = require('express'),
 	http = require('http'),
 	path = require('path'),
 	app = express(),
+	server = http.createServer(app),
+	io = require('socket.io').listen(server);
 	config = require('config'),
 	mongoose = require('lib/mongoose'),
 	User = require('models/user').User,
@@ -31,9 +33,13 @@ app.use(express.session({
 
 app.use(require('middleware/loadUser'));
 
-require('routes')(app);
+require('routes/index')(app);
 
-http.createServer(app).listen(config.get('port'), function() {
+io.sockets.on('connection', function (socket) {
+	require('routes/sockets')(socket);
+});
+
+server.listen(config.get('port'), function() {
   console.log('Express server listening on port ' + config.get('port'));
 });
 

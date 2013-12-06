@@ -10,6 +10,7 @@
     "nconf": "*",
     "mongoose": "*",
     "connect-mongo": "*",
-    "async": "*"
+    "async": "*",
+    "socket.io": "*"
   }
 }

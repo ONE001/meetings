@@ -2,7 +2,6 @@ var User = require('models/user').User,
 	HttpError = require('error').HttpError,
 	AuthError = require('models/user').AuthError;
 
-
 module.exports = function(app) {
 	app.use(function(req, res, next) {
 		if (!req.session.user) {
