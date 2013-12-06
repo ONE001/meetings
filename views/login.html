@@ -6,19 +6,23 @@
     <title translate="TITLE"></title>
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="/css/signin.css" rel="stylesheet">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.4/angular.min.js"></script>
+    <script src="/js/lib/angular-translate.min.js"></script>
+
+    <script src="/js/core.js"></script>
+    <script src="/js/translations.js"></script>
+
+    <script src="/js/LoginCtrl.js"></script>
   </head>
 
   <body>
     <div class="container">
-      <form class="form-signin" method="post">
-        <input type="text" class="form-control" name="login" placeholder="Login" required autofocus>
-        <input type="password" class="form-control" name="password" placeholder="Password" required>
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+      <form action="/" name="loginForm" class="form-signin" method="post">
+        <input type="text" class="form-control" ng-model="loginType" name="login" required autofocus placeholder="{{ 'Login' | translate }}" />
+        <input type="password" class="form-control" ng-model="passwordType" name="password" required placeholder="{{ 'Password' | translate }}" />
+        <button type="submit" ng-disabled="!loginForm.$valid" class="btn btn-lg btn-primary btn-block" translate="{{ 'Sign in/Sign up' | translate }}"></button>
       </form>
-    </div> <!-- /container -->
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.3/angular.min.js"></script>
-    <script src="/js/lib/angular-translate.min.js"></script>
-    <script src="/js/core.js"></script>
-    <script src="/js/translations.js"></script>
+    </div>
   </body>
 </html>

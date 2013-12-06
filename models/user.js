@@ -79,8 +79,7 @@ exports.User = mongoose.model('User', schema);
 
 function AuthError(message) {
 	Error.apply(this, arguments);
-	Error.captureStackTrace(this, HttpError);
-
+	Error.captureStackTrace(this, AuthError);
 	this.message = message;
 }
 

@@ -1,4 +1,4 @@
-var app = angular.module('MEETING', ['pascalprecht.translate']);
+var app = angular.module('MEETINGS', ['pascalprecht.translate']);
 
 /*var socket = io.connect('http://localhost');
 socket.on('news', function (data) {

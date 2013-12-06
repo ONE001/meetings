@@ -33,10 +33,3 @@ module.exports = function(app) {
 		res.sendfile('views/index.html');
 	});
 };
-
-
-/*function(err, user) {
-		if (err) return callback(err);
-		req.session.user = user._id;
-		req.send({});
-	}*/
