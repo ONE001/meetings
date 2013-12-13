@@ -4,10 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title translate="TITLE"></title>
-    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
     <link href="/css/style.css" rel="stylesheet">
 
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.4/angular.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.5/angular.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="/js/lib/angular-translate.min.js"></script>
 
@@ -16,10 +18,12 @@
     <script src="/js/MainCtrl.js"></script>
   </head>
 
-  <body ng-cloak ng-controller="MainCtrl" ng-init="init()">
+  <body ng-cloak ng-controller="MainCtrl" ng-init="MainCtrl.init()">
+    <ng-include src="'templates/navbar.html'" onload="MainCtrl.navbar()"></ng-include>
+
+    <!-- ................................................................... -->
 
     <div class="container">
-
       <div class="row row-offcanvas row-offcanvas-right">
 
         <div class="col-xs-12 col-sm-9">
@@ -43,6 +47,7 @@
             <a href="#" class="list-group-item">Link2</a>
           </div>
         </div><!--/span-->
+
       </div><!--/row-->
 
       <hr/>
