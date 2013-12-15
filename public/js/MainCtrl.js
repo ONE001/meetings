@@ -1,14 +1,14 @@
 app.controller("MainCtrl", ["$scope", function($scope) {
+    $scope.current_user = null;
+
     this.init = function() {
 	console.info("init main controller");
-
-        app.socket.on("user", function(data) {
-            console.log(data);
-        });
     };
 
     this.navbar = function() {
-        console.log(123);
+        app.socket.on("user", function(user) {
+            $scope.$apply(function(s) { s.current_user = user; });
+        });
     };
 
     this.logout = function(action) {

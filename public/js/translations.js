@@ -8,7 +8,7 @@ app.config(function ($translateProvider) {
         "Find": "Find",
     });
     $translateProvider.translations('ru', {
-	"TITLE": "Встречи",
+	"TITLE": "Meetings",
 	"Login": "Логин",
 	"Password": "Пароль",
 	"Sign in/Sign up": "Логин/Регистрация",
