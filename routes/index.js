@@ -1,7 +1,7 @@
 var User = require('models/user').User,
     HttpError = require('error').HttpError,
-    AuthError = require('models/user').AuthError;
-
+    AuthError = require('models/user').AuthError
+;
 
 module.exports = function(app) {
     app.use(app.router);
@@ -31,9 +31,13 @@ module.exports = function(app) {
 	});
     });
 
-    app.post('/logout', function(req, res) {
-        req.session.destroy();
-        res.redirect('/');
+    app.post('/logout', function(req, res, next) {
+        var sid = req.session.id;
+        req.session.destroy(function(err) {
+            req.app.get('io').sockets.$emit("session:reload", sid);
+            if (err) next(err);
+            res.redirect('/');
+        });
     });
 
     app.get('/templates/:template', function(req, res) {

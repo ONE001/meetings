@@ -9,11 +9,8 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.4/angular.min.js"></script>
     <script src="/js/lib/angular-translate.min.js"></script>
-
     <script src="/js/core.js"></script>
     <script src="/js/translations.js"></script>
-
-    <script src="/js/LoginCtrl.js"></script>
   </head>
 
   <body>
@@ -21,7 +18,7 @@
       <form action="/" name="loginForm" class="form-signin" method="post">
         <input type="text" class="form-control" ng-model="loginType" name="login" required autofocus placeholder="{{ 'Login' | translate }}" />
         <input type="password" class="form-control" ng-model="passwordType" name="password" required placeholder="{{ 'Password' | translate }}" />
-        <button type="submit" ng-disabled="!loginForm.$valid" class="btn btn-lg btn-primary btn-block" translate="{{ 'Sign in/Sign up' | translate }}"></button>
+        <button type="submit" class="btn btn-lg btn-primary btn-block" translate="{{ 'Sign in/Sign up' | translate }}"></button>
       </form>
     </div>
   </body>
