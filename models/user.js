@@ -24,11 +24,15 @@ var schema = new Schema({
     },
     created_at: {
 	type: Date,
-    default: Date.now,
+        default: Date.now,
     },
     ip: {
 	type: String,
     },
+    friends: {
+        type: Schema.Types.ObjectId,
+        ref: 'Friends',
+    }
 });
 
 schema.methods.encryptPassword = function(password) {
@@ -58,16 +62,15 @@ schema.statics.authorize = function(login, password, callback) {
 	},
 	function(user, callback) {
 	    if (user) {
-		if (user.checkPassword(password)) {
+		if (user.checkPassword(password))
 		    callback(null, user);
-		} else {
+		else
 		    callback(new AuthError("Password incorrect"));
-		}
 	    } else {
 		var user = new User({login: login, password: password});
 		user.save(function(err) {
 		    if (err) return callback(err);
-		    callback(null, user);
+                    callback(null, user);
 		});
 	    }
 	}

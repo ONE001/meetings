@@ -1,4 +1,11 @@
 app.config(function ($translateProvider) {
+    var lang = /[a-z]{2}/.exec(navigator.language);
+
+    if (lang) lang = lang[0].toLowerCase();
+    else lang = "en";
+
+    $translateProvider.preferredLanguage(lang);
+
     $translateProvider.translations('en', {
 	"TITLE": "Meetings",
 	"Login": "Login",
@@ -6,6 +13,7 @@ app.config(function ($translateProvider) {
 	"Sign in/Sign up": "Sign in/Sign up",
         "Sign out": "Sign out",
         "Find": "Find",
+        "Found people": "Found people",
     });
     $translateProvider.translations('ru', {
 	"TITLE": "Meetings",
@@ -14,6 +22,6 @@ app.config(function ($translateProvider) {
 	"Sign in/Sign up": "Логин/Регистрация",
         "Sign out": "Выход",
         "Find": "Найти",
+        "Found people": "Найденные люди",
     });
-    $translateProvider.preferredLanguage(navigator.language);
 });

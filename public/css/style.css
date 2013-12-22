@@ -1,12 +1,24 @@
 [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
-  display: none !important;
+    display: none !important;
 }
 
 body {
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-  padding-top: 70px;
+    font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+    padding-top: 70px;
 }
 
 a {
-  color: #00B7FF;
+    color: #00B7FF;
+}
+
+.add-to-friends, .approve-to-friends, .remove-from-friends {
+    cursor: pointer;
+}
+
+.remove-from-friends {
+    color: red;
+}
+
+.add-to-friends, .approve-to-friends {
+    color: green;
 }

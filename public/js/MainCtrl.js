@@ -6,10 +6,18 @@ app.controller("MainCtrl", ["$scope", function($scope) {
     };
 
     this.navbar = function() {
-        app.socket.on("user", function(user) {
-            $scope.$apply(function(s) { s.current_user = user; });
+        app.proxy.on("user", function(user) {
+            console.log("current_user", user);
+            $scope.$apply(function(s) {
+                if (!user.friends) {
+                    user.friends = {};
+                }
+                s.current_user = user;
+            });
         });
     };
+
+    // **********************************************************
 
     this.logout = function(action) {
         $("<form method='post' action='" + action + "'>").submit();

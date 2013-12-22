@@ -4,7 +4,8 @@ var config = require('config'),
     cookie = require('cookie'),
     sessionStore = require('lib/sessionStore'),
     HttpError = require('error').HttpError,
-    User = require('models/user').User;
+    User = require('models/user').User
+;
 
 function LoadSession(sid, callback) {
     sessionStore.load(sid, function(err, session) {
@@ -28,7 +29,7 @@ module.exports = function(server) {
     // io.enable('browser client minification');  // send minified client
     // io.enable('browser client etag');          // apply etag caching logic based on version number
     // io.enable('browser client gzip');          // gzip the file
-    //io.set('log level', 1);                    // reduce logging
+    // io.set('log level', 1);                    // reduce logging
 
     io.set('transports', config.get("socket:transports"));
     io.set('origins', config.get("socket:origins"));

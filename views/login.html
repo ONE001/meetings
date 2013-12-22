@@ -2,14 +2,20 @@
 <html ng-app="MEETINGS">
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title translate="TITLE"></title>
+
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" src="//normalize-css.googlecode.com/svn/trunk/normalize.css" />
     <link href="/css/signin.css" rel="stylesheet">
 
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.4/angular.min.js"></script>
     <script src="/js/lib/angular-translate.min.js"></script>
-    <script src="/js/core.js"></script>
+
+    <script type="text/javascript">
+      var app = angular.module('MEETINGS', ['pascalprecht.translate']);
+    </script>
+
     <script src="/js/translations.js"></script>
   </head>
 
