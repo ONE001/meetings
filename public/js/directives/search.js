@@ -48,8 +48,6 @@ app.directive('search', function() {
             });
 
             app.proxy.on("found_people", function(people) {
-                console.log("found_people", people);
-
                 $scope.$apply(function(s) {
                     var content = "",
                         friends = s.current_user.friends
@@ -88,7 +86,9 @@ app.directive('search', function() {
                             input.popover("destroy");
                     });
                 });
-            });
-        },
+            }); // found_people
+
+        }, // link
+
     };
 });

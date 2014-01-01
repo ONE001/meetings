@@ -32,7 +32,7 @@ var schema = new Schema({
     friends: {
         type: Schema.Types.ObjectId,
         ref: 'Friends',
-    }
+    },
 });
 
 schema.methods.encryptPassword = function(password) {

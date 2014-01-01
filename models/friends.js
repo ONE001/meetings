@@ -3,18 +3,21 @@ var mongoose = require('lib/mongoose'),
 ;
 
 var schema = new Schema({
-    approved: {
-        type: Array,
-        default: [],
-    },
-    sent_invitations: {
-        type: Array,
-        default: [],
-    },
-    received_invitations: {
-        type: Array,
-        default: [],
-    },
+    approved: [{
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        unique: true,
+    }],
+    sent_invitations: [{
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        unique: true,
+    }],
+    received_invitations: [{
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        unique: true,
+    }],
     created_at: {
 	type: Date,
         default: Date.now,

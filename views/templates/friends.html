@@ -1,0 +1,8 @@
+<div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar" role="navigation">
+  <div class="list-group">
+    <a href="#" class="list-group-item" ng-click="open_chat(friend)"  ng-repeat="friend in friends">
+      {{ friend.username || friend.login }}
+      <span ng-click="remove_from_friends(friend)" class="remove-from-friends glyphicon glyphicon-minus"></span>
+    </a>
+  </div>
+</div>

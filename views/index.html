@@ -23,12 +23,8 @@
 
     <script type="text/javascript">
         // init connector
-        new app.proxy("http://localhost", function() {
-            this
-                .on('connect', function () {
-                    console.info('connection established');
-                })
-                .on('logout', function() {
+        new app.proxy(location.origin, function() {
+            this.on('logout', function() {
                     location.href = '/';
                 })
             ;
@@ -41,6 +37,7 @@
     <!-- directives  -->
 
     <script src="/js/directives/search.js"></script>
+    <script src="/js/directives/friends.js"></script>
   </head>
 
   <body ng-cloak ng-controller="MainCtrl" ng-init="MainCtrl.init()">
@@ -66,12 +63,7 @@
           </div><!--/row-->
         </div><!--/span-->
 
-        <div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar" role="navigation">
-          <div class="list-group">
-            <a href="#" class="list-group-item active">Link1</a>
-            <a href="#" class="list-group-item">Link2</a>
-          </div>
-        </div><!--/span-->
+        <div friends></div>
 
       </div><!--/row-->
 

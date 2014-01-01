@@ -17,6 +17,7 @@ a {
 
 .remove-from-friends {
     color: red;
+    float: right;
 }
 
 .add-to-friends, .approve-to-friends {
