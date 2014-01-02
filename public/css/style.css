@@ -17,9 +17,45 @@ a {
 
 .remove-from-friends {
     color: red;
+}
+
+.friends .remove-from-friends {
     float: right;
 }
 
 .add-to-friends, .approve-to-friends {
     color: green;
+}
+
+.chat {
+    padding: 10px;
+    border: 1px #ddd solid;
+    border-radius: 4px;
+    display: none;
+}
+
+.chat.opened {
+    display: block!important;
+}
+
+.chat .form-group {
+    display: inline;
+}
+
+.chat .form-group .form-control {
+    width: 80%;
+}
+
+.chat .form-group button {
+    padding: 25px 16px;
+}
+
+.chat .messages {
+    min-height: 100px;
+    max-height: 400px;
+    overflow: auto;
+}
+
+.chat .messages > div {
+    padding:3px;
 }

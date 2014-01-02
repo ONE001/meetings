@@ -14,6 +14,8 @@ app.config(function ($translateProvider) {
         "Sign out": "Sign out",
         "Find": "Find",
         "Found people": "Found people",
+        "wants_add_you": "wants add you as a friend",
+        "Send": "Send",
     });
     $translateProvider.translations('ru', {
 	"TITLE": "Meetings",
@@ -23,5 +25,7 @@ app.config(function ($translateProvider) {
         "Sign out": "Выход",
         "Find": "Найти",
         "Found people": "Найденные люди",
+        "wants_add_you": "хочет добавить вас в друзья",
+        "Send": "Отправить",
     });
 });

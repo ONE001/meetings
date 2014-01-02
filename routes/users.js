@@ -1,8 +1,27 @@
-module.exports = function(client) {
+module.exports = function(io, client, events) {
     var User = require('models/user').User,
         Friends = require('models/friends').Friends,
         async = require('async')
     ;
+
+    function approved_friends_by_id(friends_id, callback) {
+        if (!friends_id)
+            return callback([]);
+
+        Friends
+            .findOne({_id: friends_id})
+            .populate({
+                path: 'approved',
+                select: 'username login',
+            })
+            .exec(function(err, friends) {
+                if (friends && friends.approved)
+                    callback(friends.approved);
+                else
+                    callback([]);
+            })
+        ;
+    }
 
     // user
     function update_current_user() {
@@ -11,16 +30,13 @@ module.exports = function(client) {
             .exec(function(err, user) {
                 client.emit('user', user);
 
-                Friends
-                    .findOne({_id: user.friends._id})
-                    .populate({
-                        path: 'approved',
-                        select: 'username login'
-                    })
-                    .exec(function(err, friends) {
-                        client.emit('friends', friends.approved);
+                if (user.friends) {
+                    approved_friends_by_id(user.friends._id, function(approved) {
+                        client.emit('friends', approved);
                     });
-            });
+                }
+            })
+        ;
     }
 
     update_current_user();
@@ -61,7 +77,9 @@ module.exports = function(client) {
             .exec(function(err, user1) {
                 invitation(user1, function(friends) {
                     friends.received_invitations.push(client.handshake.user);
-                    friends.save();
+                    friends.save(function() {
+                        events.update_invitations(user1._id);
+                    });
                 });
 
                 // sent
@@ -106,8 +124,16 @@ module.exports = function(client) {
 
                 user1.friends.save(function(err) {
                     if (err) callback(err);
+                    events.update_invitations(user1._id);
+                    approved_friends_by_id(user1.friends._id, function(approved) {
+                        events.send(user1._id, "friends", approved);
+                    });
                     user2.friends.save(function(err) {
                         if (err) callback(err);
+                        events.update_invitations(user2._id);
+                        approved_friends_by_id(user2.friends._id, function(approved) {
+                            events.send(user2._id, "friends", approved);
+                        });
                         callback(null, user1, user2);
                     });
                 });
@@ -146,8 +172,16 @@ module.exports = function(client) {
 
                 user1.friends.save(function(err) {
                     if (err) callback(err);
+                    events.update_invitations(user1._id);
+                    approved_friends_by_id(user1.friends._id, function(approved) {
+                        events.send(user1._id, "friends", approved);
+                    });
                     user2.friends.save(function(err) {
                         if (err) callback(err);
+                        events.update_invitations(user2._id);
+                        approved_friends_by_id(user2.friends._id, function(approved) {
+                            events.send(user2._id, "friends", approved);
+                        });
                         callback(null, user1, user2);
                     });
                 });

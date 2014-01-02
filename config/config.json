@@ -22,6 +22,7 @@
     "socket": {
         "origins": "localhost:*",
         "heartbeats": true,
-        "transports": ["websocket", "htmlfile", "xhr-polling", "jsonp-polling"]
+        "transports": ["websocket", "htmlfile", "xhr-polling", "jsonp-polling"],
+        "key_for_private_rooms": "Boloniy"
     }
 }
