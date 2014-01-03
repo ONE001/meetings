@@ -11,6 +11,10 @@ a {
     color: #00B7FF;
 }
 
+.full_screen {
+    width: 90%;
+}
+
 .add-to-friends, .approve-to-friends, .remove-from-friends {
     cursor: pointer;
 }
@@ -58,4 +62,48 @@ a {
 
 .chat .messages > div {
     padding:3px;
+}
+
+.chat .title {
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.chat .control-panel {
+    float:right;
+}
+
+.chat .control-panel > div {
+    cursor: pointer;
+    margin-right: 3px;
+}
+
+#addition_people .modal-body {
+    display: inline-block;
+    width: 100%;
+}
+
+#addition_people .modal-body > div,
+#addition_people .modal-body > button {
+    float: left;
+    margin: 0 10px;
+}
+#addition_people .modal-body > div {
+    min-width: 121px;
+    min-height: 100px;
+    max-height: 300px;
+
+    border-radius: 4px;
+    border: 1px #ddd solid;
+    overflow: auto;
+}
+
+#addition_people .modal-body > div > div {
+    padding: 10px;
+    border-bottom: 1px #ddd solid;
+}
+
+#addition_people .modal-body > div > div.active {
+    background: blue;
+    color: white;
 }

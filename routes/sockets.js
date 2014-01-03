@@ -6,6 +6,8 @@ module.exports = function(io) {
 
             require('routes/users')(io, socket, events);
             require('routes/messages')(io, socket, events);
+
+            socket.emit('ready');
         });
     });
 

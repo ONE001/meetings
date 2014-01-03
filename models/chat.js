@@ -8,6 +8,13 @@ var schema = new Schema({
         ref: 'User',
         required: true,
     }],
+    not_read: [{
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+    }],
+    name: {
+        type: String,
+    },
     messages: [{
         body: {
             type: String,

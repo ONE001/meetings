@@ -1,5 +1,6 @@
 var User = require('models/user').User,
     Friends = require('models/friends').Friends,
+    Chat = require('models/chat').Chat,
     config = require('config')
 ;
 
@@ -27,8 +28,12 @@ module.exports = function(io, client) {
         });
     }
 
-    function update_new_messages() {
-        return null;
+    function update_new_messages(user_id) {
+        Chat.find({not_read: {
+            $in: [user_id]
+        }}, '_id name', function(err, chats) {
+            io.sockets.in(events_room(user_id)).emit('unread_messages', chats);
+        });
     }
 
     update_invitations(client.handshake.user._id);

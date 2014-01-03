@@ -1,3 +1,5 @@
+app.cache = window.sessionStorage || {};
+
 app.directive("ngEnter", function () {
     return function($scope, element, attrs) {
         element.bind("keydown keypress", function (event) {
@@ -31,7 +33,7 @@ app.controller("MainCtrl", ["$scope", function($scope) {
     this.init = function() {
         $.when.apply(this, app.promises).done(function() {
             console.info("init main controller");
-            app.proxy.emit("ready");
+            app.proxy.ready();
         });
     };
 
@@ -50,7 +52,8 @@ app.controller("MainCtrl", ["$scope", function($scope) {
     // **********************************************************
 
     this.logout = function(action) {
-        $("<form method='post' action='" + action + "'>").submit();
+        $("<form method='post' action='" + action + "'>").appendTo("body").submit();
+        app.cache.clear();
         return false;
     };
 

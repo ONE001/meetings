@@ -16,6 +16,12 @@ app.config(function ($translateProvider) {
         "Found people": "Found people",
         "wants_add_you": "wants add you as a friend",
         "Send": "Send",
+        "full screen": "Full screen",
+        "add people": "Add people",
+        "Addition people": "Addition people",
+        "Close": "Close",
+        "unread messages in chat": "Unread messages in the chat",
+        "footer": '',
     });
     $translateProvider.translations('ru', {
 	"TITLE": "Meetings",
@@ -27,5 +33,11 @@ app.config(function ($translateProvider) {
         "Found people": "Найденные люди",
         "wants_add_you": "хочет добавить вас в друзья",
         "Send": "Отправить",
+        "full screen": "На весь экран",
+        "add people": "Добавить людей",
+        "Addition people": "Добавление людей",
+        "Close": "Отмена",
+        "unread messages in chat": "Имеются непрочитанные сообщения в чате",
+        "footer": '',
     });
 });

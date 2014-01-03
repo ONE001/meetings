@@ -53,6 +53,11 @@ schema.methods.checkPassword = function(password) {
     return this.encryptPassword(password) === this.hashedPassword;
 };
 
+schema.virtual('name')
+    .get(function() {
+        return this.username || this.login;
+    });
+
 schema.statics.authorize = function(login, password, callback) {
     var User = this;
 

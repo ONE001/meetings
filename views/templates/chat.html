@@ -1,4 +1,13 @@
-<div class="col-xs-12 col-sm-9 chat ng-class: {'opened': chat}">
+<div class="col-xs-12 chat ng-class: {'opened': chat, 'col-sm-12': full_screen, 'col-sm-9': !full_screen}">
+  <span class="title">{{ chat.username || chat.login }}</span>
+
+  <div class="control-panel">
+    <div class="glyphicon glyphicon-fullscreen" ng-click="expand_full_screen();" ng-tooltip="{{ 'full screen' | translate }}"></div>
+    <div class="glyphicon glyphicon-plus" ng-click="addition_people();" ng-tooltip="{{ 'add people' | translate }}"></div>
+  </div>
+
+  <hr/>
+
   <div class="messages">
     <div ng-repeat="message in messages">
       {{message.created_at | date:'HH:mm:ss'}} <b>{{ message.from.username || message.from.login }}:</b> {{ message.body }}
@@ -13,4 +22,6 @@
       <button type="button" ng-click="send_message(new_message)" class="btn btn-default btn-lg">{{ 'Send' | translate }}</button>
     </div>
   </form>
+
+  <ng-include src="'templates/addition_people.html'"></ng-include>
 </div>
