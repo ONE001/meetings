@@ -4,9 +4,14 @@ var mongoose = require('lib/mongoose'),
 
 var schema = new Schema({
     approved: [{
-        type: Schema.Types.ObjectId,
-        ref: 'User',
-        unique: true,
+        friend: {
+            type: Schema.Types.ObjectId,
+            ref: 'User',
+        },
+        chat: {
+            type: Schema.Types.ObjectId,
+            ref: 'Chat',
+        },
     }],
     sent_invitations: [{
         type: Schema.Types.ObjectId,
@@ -26,7 +31,7 @@ var schema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'User',
         unique: true,
-    }
+    },
 });
 
 exports.Friends = mongoose.model('Friends', schema);

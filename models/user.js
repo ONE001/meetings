@@ -2,7 +2,8 @@ var crypto = require('crypto'),
     mongoose = require('lib/mongoose'),
     Schema = mongoose.Schema,
     async = require('async'),
-    util = require('util')
+    util = require('util'),
+    Friends = require('models/friends').Friends
 ;
 
 var schema = new Schema({
@@ -73,9 +74,15 @@ schema.statics.authorize = function(login, password, callback) {
 		    callback(new AuthError("Password incorrect"));
 	    } else {
 		var user = new User({login: login, password: password});
+
 		user.save(function(err) {
 		    if (err) return callback(err);
-                    callback(null, user);
+
+                    var friends = new Friends({ user: user._id });
+                    friends.save(function(err, friends) {
+                        user.friends = friends;
+                        user.save(callback);
+                    });
 		});
 	    }
 	}
