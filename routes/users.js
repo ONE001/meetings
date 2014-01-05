@@ -5,28 +5,6 @@ module.exports = function(io, client, events) {
         Chat = require('models/chat').Chat
     ;
 
-    function approved_friends_by_id(friends_id, callback) {
-        if (!friends_id)
-            return callback([]);
-
-        Friends.findOne({_id: friends_id})
-            .populate({
-                path: 'approved.friend',
-                select: 'username login',
-            })
-            .populate({
-                path: 'approved.chat',
-                select: '_id name',
-            })
-            .exec(function(err, friends) {
-                if (friends && friends.approved)
-                    callback(friends.approved);
-                else
-                    callback([]);
-            })
-        ;
-    }
-
     // user
     function update_current_user() {
         User.findById(client.handshake.user)
@@ -35,7 +13,7 @@ module.exports = function(io, client, events) {
                 client.emit('user', user);
 
                 if (user.friends) {
-                    approved_friends_by_id(user.friends._id, function(approved) {
+                    Friends.approvedById(user.friends._id, function(approved) {
                         client.emit('friends', approved);
                     });
                 }
@@ -103,23 +81,30 @@ module.exports = function(io, client, events) {
                     });
             },
             function(user1, user2, callback) {
-                //user1.friends.approved.remove();
+                user1.friends.approved.forEach(function(f) {
+                    if (user2._id.toHexString() == f.friend.toHexString())
+                        user1.friends.approved.remove(f);
+                });
                 user1.friends.sent_invitations.remove(user2);
                 user1.friends.received_invitations.remove(user2);
-                user2.friends.approved.remove({friend: user1});
+
+                user2.friends.approved.forEach(function(f) {
+                    if (f.friend.toHexString() == user1._id.toHexString())
+                        user2.friends.approved.remove(f);
+                });
                 user2.friends.sent_invitations.remove(user1);
                 user2.friends.received_invitations.remove(user1);
 
                 user1.friends.save(function(err) {
                     if (err) callback(err);
                     events.update_invitations(user1._id);
-                    approved_friends_by_id(user1.friends._id, function(approved) {
+                    Friends.approvedById(user1.friends._id, function(approved) {
                         events.send(user1._id, "friends", approved);
                     });
                     user2.friends.save(function(err) {
                         if (err) callback(err);
                         events.update_invitations(user2._id);
-                        approved_friends_by_id(user2.friends._id, function(approved) {
+                        Friends.approvedById(user2.friends._id, function(approved) {
                             events.send(user2._id, "friends", approved);
                         });
                         callback(null, user1, user2);
@@ -170,13 +155,13 @@ module.exports = function(io, client, events) {
                     user1.friends.save(function(err) {
                         if (err) callback(err);
                         events.update_invitations(user1._id);
-                        approved_friends_by_id(user1.friends._id, function(approved) {
+                        Friends.approvedById(user1.friends._id, function(approved) {
                             events.send(user1._id, "friends", approved);
                         });
                         user2.friends.save(function(err) {
                             if (err) callback(err);
                             events.update_invitations(user2._id);
-                            approved_friends_by_id(user2.friends._id, function(approved) {
+                            Friends.approvedById(user2.friends._id, function(approved) {
                                 events.send(user2._id, "friends", approved);
                             });
                             callback(null, user1, user2);

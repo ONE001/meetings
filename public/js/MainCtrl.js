@@ -1,13 +1,12 @@
 app.cache = window.sessionStorage || {};
 
-app.directive("ngEnter", function () {
+app.directive("ngShiftEnter", function () {
     return function($scope, element, attrs) {
-        element.bind("keydown keypress", function (event) {
+        element.bind("keydown", function (event) {
             if(event.which === 13 && event.shiftKey) {
                 $scope.$apply(function () {
-                    $scope.$eval(attrs.ngEnter);
+                    $scope[attrs.ngShiftEnter](element.val());
                 });
-
                 event.preventDefault();
             }
         });
@@ -26,6 +25,40 @@ app.directive("ngTooltip", function() {
         element.tooltip();
     };
 });
+
+app
+    .filter('newlines', function() {
+        return function(text) {
+            return text.replace(/\n/g, '<br/>');
+        }
+    })
+    .filter('noHTML', function() {
+        return function(text) {
+            return text
+                .replace(/&/g, '&amp;')
+                .replace(/>/g, '&gt;')
+                .replace(/</g, '&lt;');
+        }
+    })
+    .filter('links', function() {
+        var
+            //URLs starting with http://, https://, or ftp://
+            replacePattern1 = /(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gim,
+            //URLs starting with "www." (without // before it, or it'd re-link the ones done above).
+            replacePattern2 = /(^|[^\/])(www\.[\S]+(\b|$))/gim,
+            //Change email addresses to mailto:: links.
+            replacePattern3 = /(([a-zA-Z0-9\-\_\.])+@[a-zA-Z\_]+?(\.[a-zA-Z]{2,6})+)/gim
+        ;
+
+        return function(text) {
+            return text
+                .replace(replacePattern1, '<a href="$1" target="_blank">$1</a>')
+                .replace(replacePattern2, '$1<a href="http://$2" target="_blank">$2</a>')
+                .replace(replacePattern3, '<a href="mailto:$1">$1</a>')
+            ;
+        };
+    })
+;
 
 app.controller("MainCtrl", ["$scope", function($scope) {
     $scope.current_user = null;

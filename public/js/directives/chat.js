@@ -27,23 +27,19 @@
                     $scope.$apply(function(s) {
                         s.messages = messages;
                     });
-                    element.find("textarea").val('').focus();
                     element.find(".messages").scrollTop(element.find(".messages").prop("scrollHeight"));
                     app.proxy.emit("read");
                 });
 
                 $scope.open_chat = function(c) {
-                    if ($.type(c) === "string") {
-                        app.cache["chat"] = c;
-                    } else {
-                        app.cache["chat"] = JSON.stringify(c);
-                    }
+                    app.cache["chat"] = JSON.stringify(c);
                     $scope.chat = c;
                     app.proxy.emit("open_chat", c);
                 };
 
                 $scope.send_message = function(message) {
                     app.proxy.emit("new_message", message);
+                    element.find("textarea").val('').focus();
                 };
 
                 $scope.expand_full_screen = function() {
@@ -57,10 +53,14 @@
                     element.find("#addition_people").modal();
                 };
 
+                $scope.call = function() {
+                    //$scope.chat
+                };
+
                 // --------------------------------------------
 
                 if (app.cache["chat"]) {
-                    //$scope.open_chat(JSON.parse(app.cache["chat"]));
+                    $scope.open_chat(JSON.parse(app.cache["chat"]));
                 }
 
                 $scope.full_screen = (app.cache["full_screen"] == "true");

@@ -21,6 +21,7 @@ app.config(function ($translateProvider) {
         "Addition people": "Addition people",
         "Close": "Close",
         "unread messages in chat": "Unread messages in the chat",
+        "call": "Call",
         "footer": '',
     });
     $translateProvider.translations('ru', {
@@ -38,6 +39,7 @@ app.config(function ($translateProvider) {
         "Addition people": "Добавление людей",
         "Close": "Отмена",
         "unread messages in chat": "Имеются непрочитанные сообщения в чате",
+        "call": "Вызвать",
         "footer": '',
     });
 });

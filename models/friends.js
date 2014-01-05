@@ -34,4 +34,25 @@ var schema = new Schema({
     },
 });
 
+schema.statics.approvedById = function(_id, callback) {
+    if (!_id) return callback([]);
+
+    this.findOne({_id: _id})
+        .populate({
+            path: 'approved.friend',
+            select: 'username login',
+        })
+        .populate({
+            path: 'approved.chat',
+            select: '_id name',
+        })
+        .exec(function(err, friends) {
+            if (friends && friends.approved)
+                callback(friends.approved);
+            else
+                callback([]);
+        })
+    ;
+};
+
 exports.Friends = mongoose.model('Friends', schema);

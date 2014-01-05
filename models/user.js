@@ -78,8 +78,7 @@ schema.statics.authorize = function(login, password, callback) {
 		user.save(function(err) {
 		    if (err) return callback(err);
 
-                    var friends = new Friends({ user: user._id });
-                    friends.save(function(err, friends) {
+                    new Friends({ user: user._id }).save(function(err, friends) {
                         user.friends = friends;
                         user.save(callback);
                     });

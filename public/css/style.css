@@ -107,3 +107,7 @@ a {
     background: blue;
     color: white;
 }
+
+.images_in_chat {
+    width: 100%;
+}
