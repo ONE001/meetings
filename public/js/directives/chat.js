@@ -49,13 +49,6 @@
 
                 // --------------------------------------------
 
-                $scope.call = function(chat) {
-                    chat = chat || $scope.chat;
-                    $scope.open_chat(chat);
-                };
-
-                // --------------------------------------------
-
                 if (app.cache["chat"]) {
                     $scope.open_chat(JSON.parse(app.cache["chat"]));
                 }

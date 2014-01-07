@@ -3,20 +3,19 @@ module.exports = function(io, client, events) {
         User = require('models/user').User,
         config = require('config'),
         _chat,
+        current_room = function() {
+            return config.get("socket:key_for_private_rooms") + _chat._id;
+        },
         join_room = function() {
             if (!_chat) return;
-            var room = config.get("socket:key_for_private_rooms") + _chat._id;
-            client.join(room);
+            client.join(current_room());
         },
         leave_room = function() {
             if (!_chat) return;
-            var room = config.get("socket:key_for_private_rooms") + _chat._id;
-            client.leave(room);
+            client.leave(current_room());
         },
         update_messages = function() {
             if (!_chat) return;
-
-            var room = config.get("socket:key_for_private_rooms") + _chat._id;
 
             Chat.findOne({_id: _chat._id})
                 .populate({
@@ -26,7 +25,7 @@ module.exports = function(io, client, events) {
                 .exec(function(err, chat) {
                     var messages = [];
                     if (chat) messages = chat.messages;
-                    io.sockets.in(room).emit("messages", messages);
+                    io.sockets.in(current_room()).emit("messages", messages);
                 });
         }
     ;
@@ -83,12 +82,16 @@ module.exports = function(io, client, events) {
         });
     });
 
-    client.on("read", function() {
+    client.on('read', function() {
         Chat.findOne({_id: _chat._id}, function(err, chat) {
             chat.not_read.remove(client.handshake.user);
             chat.save(function() {
                 events.update_new_messages(client.handshake.user._id);
             });
         });
+    });
+
+    client.on('phone', function (message) {
+	client.broadcast.to(current_room()).emit('phone', message);
     });
 };
