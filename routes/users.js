@@ -6,7 +6,7 @@ module.exports = function(io, client, events) {
     ;
 
     // user
-    function update_current_user() {
+    function update() {
         User.findById(client.handshake.user)
             .populate('friends')
             .exec(function(err, user) {
@@ -14,16 +14,24 @@ module.exports = function(io, client, events) {
 
                 if (user.friends) {
                     Friends.approvedById(user.friends._id, function(approved) {
-                        client.emit('friends', approved);
+                        var res = [];
+                        approved.forEach(function(a) {
+                            var current = {f: a}
+                            current.online = io.sockets.clients(events.room(a.friend._id)).length;
+                            res.push(current);
+                        });
+                        client.emit('friends', res);
                     });
                 }
             })
         ;
     }
 
-    update_current_user();
+    update();
 
     // =========================================================
+
+    client.on('need_update', update);
 
     client.on('find_people', function(str) {
         User
@@ -56,7 +64,7 @@ module.exports = function(io, client, events) {
                     .exec(function(err, user2) {
                         user2.friends.sent_invitations.push(user1);
                         user2.friends.save();
-                        update_current_user();
+                        update();
                         client.emit('added-to-friends', true);
                     });
             });
@@ -112,7 +120,7 @@ module.exports = function(io, client, events) {
                 });
             }
         ], function(err, user1, user2) {
-            update_current_user();
+            update();
             client.emit('removed-from-friends', true);
         });
     });
@@ -171,7 +179,7 @@ module.exports = function(io, client, events) {
 
             }
         ], function(err) {
-            update_current_user();
+            update();
             client.emit('approved-to-friends', true);
         });
     });

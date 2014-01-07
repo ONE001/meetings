@@ -82,6 +82,10 @@ app.controller("MainCtrl", ["$scope", function($scope) {
         });
     };
 
+    app.proxy.on("need_update", function() {
+        app.proxy.emit("need_update");
+    });
+
     // **********************************************************
 
     this.logout = function(action) {

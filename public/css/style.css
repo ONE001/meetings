@@ -162,3 +162,20 @@ a {
 div[call] video {
     width: 300px;
 }
+
+.offline, .online {
+    border-radius: 10px;
+    width: 10px;
+    height: 10px;
+    float: left;
+    margin-right: 10px;
+    margin-top: 3px;
+}
+
+.offline {
+    background-color: #ddd;
+}
+
+.online {
+    background-color: green;
+}

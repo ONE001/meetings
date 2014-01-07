@@ -5,11 +5,20 @@ var User = require('models/user').User,
 ;
 
 module.exports = function(io, client) {
-    function events_room(user_id) {
+    function room(user_id) {
         return config.get("socket:key_for_private_rooms") + user_id;
     }
 
-    client.join(events_room(client.handshake.user._id));
+    client.join(room(client.handshake.user._id));
+
+    function notify_friends()
+    {
+        Friends.approvedById(client.handshake.user.friends, function(approved) {
+            approved.forEach(function(f) {
+                io.sockets.in(room(f.friend._id)).emit('need_update');
+            });
+        });
+    }
 
     // invitations_to_friends
     function update_invitations(user_id) {
@@ -22,7 +31,7 @@ module.exports = function(io, client) {
                         select: 'username login',
                     })
                     .exec(function(err, inv) {
-                        io.sockets.in(events_room(user_id)).emit('invitations', inv.received_invitations);
+                        io.sockets.in(room(user_id)).emit('invitations', inv.received_invitations);
                     });
             }
         });
@@ -32,7 +41,7 @@ module.exports = function(io, client) {
         Chat.find({not_read: {
             $in: [user_id]
         }}, '_id name', function(err, chats) {
-            io.sockets.in(events_room(user_id)).emit('unread_messages', chats);
+            io.sockets.in(room(user_id)).emit('unread_messages', chats);
         });
     }
 
@@ -40,10 +49,12 @@ module.exports = function(io, client) {
     update_new_messages(client.handshake.user._id);
 
     return {
+        room: room,
+        notify_friends: notify_friends,
         update_invitations: update_invitations,
         update_new_messages: update_new_messages,
         send: function(user_id, event, data) {
-            io.sockets.in(events_room(user_id)).emit(event, data);
+            io.sockets.in(room(user_id)).emit(event, data);
         },
     };
 };

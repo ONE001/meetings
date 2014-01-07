@@ -12,6 +12,13 @@
                 navigator.getUserMedia = navigator.getUserMedia || navigator.mozGetUserMedia || navigator.webkitGetUserMedia;
                 window.URL = window.URL || window.webkitURL;
 
+                function error_callback(err) {
+                    console.info(err);
+                    $scope.$apply(function(s) {
+                        s.chat.calling = false;
+                    });
+                }
+
                 function gotStream(stream) {
                     element.append($("<video autoplay src='" + URL.createObjectURL(stream) + "'></video>"));
 
@@ -41,7 +48,7 @@
                 function createOffer() {
                     pc.createOffer(
                         gotLocalDescription,
-                        function(error) { console.log(error) },
+                        error_callback,
                         { 'mandatory': { 'OfferToReceiveAudio': true, 'OfferToReceiveVideo': true } }
                     );
                 }
@@ -50,7 +57,7 @@
                 function createAnswer() {
                     pc.createAnswer(
                         gotLocalDescription,
-                        function(error) { console.log(error) },
+                        error_callback,
                         { 'mandatory': { 'OfferToReceiveAudio': true, 'OfferToReceiveVideo': true } }
                     );
                 }
@@ -66,7 +73,7 @@
                                     pc.setRemoteDescription(new SessionDescription(message));
                                     createAnswer();
                                 },
-                                function(error) { console.log(error) }
+                                error_callback
                             );
                         } else {
                             pc.setRemoteDescription(new SessionDescription(message));
@@ -91,7 +98,7 @@
                                 gotStream(stream);
                                 createOffer();
                             },
-                            function(error) { console.log(error) }
+                            error_callback
                         );
                     } else {
                         createOffer();

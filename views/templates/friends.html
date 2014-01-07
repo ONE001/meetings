@@ -1,12 +1,13 @@
 <div class="col-xs-6 sidebar-offcanvas ng-class: {'col-sm-3 mobile-friends': chat, 'col-sm-10': !chat}" id="sidebar" role="navigation" ng-hide="full_screen">
   <div class="list-group friends ng-class: {'fixed': chat}">
-    <a href="#" class="list-group-item ng-class: {'active': f.chat._id == chat._id}" ng-dblclick="open_chat(f.chat)" ng-repeat="f in friends">
-      {{ f.friend.username || f.friend.login }}
+    <a href="#" class="list-group-item ng-class: {'active': f.f.chat._id == chat._id}" ng-dblclick="open_chat(f.f.chat)" ng-repeat="f in friends">
+      <span ng-class="{'online': f.online, 'offline': !f.online}"></span>
+      <span>{{ f.f.friend.username || f.f.friend.login }}</span>
       <div>
-        <div class="glyphicon glyphicon-comment" ng-click="open_chat(f.chat);" ng-tooltip="{{ 'open chat' | translate }}"></div>
-        <div class="glyphicon glyphicon-earphone" ng-click="call(f.chat);" ng-tooltip="{{ 'call' | translate }}"></div>
+        <div class="glyphicon glyphicon-comment" ng-click="open_chat(f.f.chat);" ng-tooltip="{{ 'open chat' | translate }}"></div>
+        <div class="glyphicon glyphicon-earphone" ng-click="call(f.f.chat);" ng-tooltip="{{ 'call' | translate }}"></div>
         <div class="glyphicon glyphicon-plus" ng-tooltip="{{ 'add people' | translate }}"></div>
-        <div ng-click="remove_from_friends(f.friend)" ng-tooltip="{{ 'remove from friends' | translate }}" class="remove-from-friends glyphicon glyphicon-minus"></div>
+        <div ng-click="remove_from_friends(f.f.friend)" ng-tooltip="{{ 'remove from friends' | translate }}" class="remove-from-friends glyphicon glyphicon-minus"></div>
       </div>
     </a>
 
