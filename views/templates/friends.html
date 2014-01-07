@@ -1,9 +1,15 @@
 <div class="col-xs-6 sidebar-offcanvas ng-class: {'col-sm-3': chat, 'col-sm-10': !chat}" id="sidebar" role="navigation" ng-hide="full_screen">
   <div class="list-group friends">
-    <a href="#" class="list-group-item" ng-click="open_chat(f.chat)"  ng-repeat="f in friends">
+    <a href="#" class="list-group-item ng-class: {'active': f.chat._id == chat._id}" ng-dblclick="open_chat(f.chat)" ng-repeat="f in friends">
       {{ f.friend.username || f.friend.login }}
-      <span ng-click="remove_from_friends(f.friend)" class="remove-from-friends glyphicon glyphicon-minus"></span>
+      <div>
+        <div class="glyphicon glyphicon-comment" ng-click="open_chat(f.chat);" ng-tooltip="{{ 'open chat' | translate }}"></div>
+        <div class="glyphicon glyphicon-earphone" ng-click="call(f.chat);" ng-tooltip="{{ 'call' | translate }}"></div>
+        <div class="glyphicon glyphicon-plus" ng-tooltip="{{ 'add people' | translate }}"></div>
+        <div ng-click="remove_from_friends(f.friend)" ng-tooltip="{{ 'remove from friends' | translate }}" class="remove-from-friends glyphicon glyphicon-minus"></div>
+      </div>
     </a>
+
     <a href="#" class="list-group-item" ng-click="open_chat(chat);" ng-repeat="chat in chats">
       {{ chat }}
     </a>

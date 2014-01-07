@@ -19,12 +19,36 @@ a {
     cursor: pointer;
 }
 
-.remove-from-friends {
-    color: red;
+.friends {
+    max-height: 400px;
+    position: fixed;
+    max-height: 400px;
+    overflow-y: auto;
+    padding-bottom: 40px;
 }
 
-.friends .remove-from-friends {
+.friends > a {
+    cursor: default;
+    float: left;
+    width: 100%;
+}
+
+.friends > .list-group-item.active {
+    background-color: #005580;
+    color: white;
+}
+
+.friends > .list-group-item > div {
     float: right;
+}
+
+.friends > .list-group-item > div > div {
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.friends > .list-group-item > div > div.remove-from-friends {
+    margin-right: 10px;
 }
 
 .add-to-friends, .approve-to-friends {
@@ -110,4 +134,15 @@ a {
 
 .images_in_chat {
     width: 100%;
+}
+
+@media (max-width: 999px) {
+    .friends {
+        position: static;
+    }
+
+    .chat .form-group .form-control {
+        width: 70%;
+        float:left;
+    }
 }

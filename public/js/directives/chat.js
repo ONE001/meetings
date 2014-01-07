@@ -49,12 +49,9 @@
 
                 // --------------------------------------------
 
-                $scope.addition_people = function() {
-                    element.find("#addition_people").modal();
-                };
-
-                $scope.call = function() {
-                    //$scope.chat
+                $scope.call = function(chat) {
+                    chat = chat || $scope.chat;
+                    $scope.open_chat(chat);
                 };
 
                 // --------------------------------------------

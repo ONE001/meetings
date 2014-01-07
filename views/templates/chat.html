@@ -3,7 +3,6 @@
 
   <div class="control-panel">
     <div class="glyphicon glyphicon-fullscreen" ng-click="expand_full_screen();" ng-tooltip="{{ 'full screen' | translate }}"></div>
-    <div class="glyphicon glyphicon-plus" ng-click="addition_people();" ng-tooltip="{{ 'add people' | translate }}"></div>
     <div class="glyphicon glyphicon-earphone" ng-click="call();" ng-tooltip="{{ 'call' | translate }}"></div>
   </div>
 
@@ -32,7 +31,10 @@
   <form class="form-inline" role="form">
     <div class="form-group ng-class: {'has-success': new_message.length > 0}">
       <textarea class="form-control" ng-shift-enter="send_message" ng-model="new_message" rows="3"></textarea>
-      <button type="button" ng-click="send_message(new_message)" class="btn btn-default btn-lg">{{ 'Send' | translate }}</button>
+      <button type="button" ng-click="send_message(new_message)" class="btn btn-default btn-lg">
+        {{ 'Send' | translate }}
+        <span class="glyphicon glyphicon-send"></span>
+      </button>
     </div>
   </form>
 

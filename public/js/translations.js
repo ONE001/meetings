@@ -22,6 +22,8 @@ app.config(function ($translateProvider) {
         "Close": "Close",
         "unread messages in chat": "Unread messages in the chat",
         "call": "Call",
+        "remove from friends": "Remove from friends",
+        "open chat": "Open chat",
         "footer": '',
     });
     $translateProvider.translations('ru', {
@@ -40,6 +42,8 @@ app.config(function ($translateProvider) {
         "Close": "Отмена",
         "unread messages in chat": "Имеются непрочитанные сообщения в чате",
         "call": "Вызвать",
+        "remove from friends": "Удалить из друзей",
+        "open chat": "Открыть чат",
         "footer": '',
     });
 });
