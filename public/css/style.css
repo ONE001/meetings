@@ -21,10 +21,13 @@ a {
 
 .friends {
     max-height: 400px;
-    position: fixed;
     max-height: 400px;
     overflow-y: auto;
     padding-bottom: 40px;
+}
+
+.fixed {
+    position: fixed;
 }
 
 .friends > a {
@@ -139,6 +142,15 @@ a {
 @media (max-width: 999px) {
     .friends {
         position: static;
+    }
+
+    .mobile-friends {
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    .chat {
+        width: 100%;
     }
 
     .chat .form-group .form-control {

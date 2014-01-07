@@ -32,7 +32,7 @@ module.exports = function(server) {
     // io.set('log level', 1);                    // reduce logging
 
     io.set('transports', config.get("socket:transports"));
-    io.set('origins', config.get("socket:origins"));
+    //io.set('origins', config.get("socket:origins"));
     io.set('heartbeats', config.get("socket:heartbeats"));
 
     io.set('authorization', function(handshake, callback) {

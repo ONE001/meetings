@@ -18,7 +18,6 @@
 
                 // not_read_messages
                 app.proxy.on("unread_messages", function(chats) { $scope.$apply(function(s) {
-                    console.log(chats);
                     s.unread_chats = chats;
                 }) });
 
