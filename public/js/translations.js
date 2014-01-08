@@ -24,6 +24,8 @@ app.config(function ($translateProvider) {
         "call": "Call",
         "remove from friends": "Remove from friends",
         "open chat": "Open chat",
+        "approve": "Approve",
+        "deny": "Deny",
         "footer": '',
     });
     $translateProvider.translations('ru', {
@@ -44,6 +46,8 @@ app.config(function ($translateProvider) {
         "call": "Вызвать",
         "remove from friends": "Удалить из друзей",
         "open chat": "Открыть чат",
+        "approve": "Подтвердить",
+        "deny": "Отказать",
         "footer": '',
     });
 });

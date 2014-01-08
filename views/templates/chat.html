@@ -13,7 +13,7 @@
   <hr ng-hide="!chat.calling"/>
 
   <div class="messages">
-    <div ng-repeat="message in messages">
+    <div ng-repeat="message in chat.messages">
       <span>
         {{message.created_at | date:'HH:mm:ss'}}
         <b>
@@ -30,7 +30,14 @@
     </div>
   </div>
 
-  <hr/>
+  <div class="participants">
+    <p ng-repeat="participant in chat.participants">
+      <span ng-class="{'online': participant.online, 'offline': !participant.online}"></span>
+      {{ participant.username || participant.login }}
+    </p>
+  </div>
+
+  <hr style="width:100%;float:left;"/>
 
   <form class="form-inline" role="form">
     <div class="form-group ng-class: {'has-success': new_message.length > 0}">
@@ -41,6 +48,4 @@
       </button>
     </div>
   </form>
-
-  <ng-include src="'templates/addition_people.html'"></ng-include>
 </div>

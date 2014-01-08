@@ -23,6 +23,15 @@ module.exports = function(io, client, events) {
                         client.emit('friends', res);
                     });
                 }
+
+                Chat.find({
+                    participants: {
+                        $in: [client.handshake.user._id],
+                    },
+                    $where: 'this.participants.length > 2',
+                }, '_id name', function(err, chats) {
+                    client.emit('chats', chats);
+                });
             })
         ;
     }
@@ -163,15 +172,11 @@ module.exports = function(io, client, events) {
                     user1.friends.save(function(err) {
                         if (err) callback(err);
                         events.update_invitations(user1._id);
-                        Friends.approvedById(user1.friends._id, function(approved) {
-                            events.send(user1._id, "friends", approved);
-                        });
+
                         user2.friends.save(function(err) {
                             if (err) callback(err);
                             events.update_invitations(user2._id);
-                            Friends.approvedById(user2.friends._id, function(approved) {
-                                events.send(user2._id, "friends", approved);
-                            });
+                            events.notify_friends();
                             callback(null, user1, user2);
                         });
                     });

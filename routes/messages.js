@@ -22,32 +22,42 @@ module.exports = function(io, client, events) {
                     path: "messages.from",
                     select: "username login",
                 })
+                .populate({
+                    path: "participants",
+                    select: "username login",
+                })
                 .exec(function(err, chat) {
-                    var messages = [];
-                    if (chat) messages = chat.messages;
-                    io.sockets.in(current_room()).emit("messages", messages);
+                    var messages = [], participants = [];
+                    if (chat) {
+                        messages = chat.messages;
+                        participants = chat.participants;
+                    }
+                    io.sockets.in(current_room()).emit("messages", {messages: messages, participants: participants});
                 });
+        },
+        open_chat = function(c) {
+            Chat.findOne({
+                _id: c._id,
+                participants: {
+                    $in: [client.handshake.user._id],
+                },
+            }, function(err, chat) {
+                console.log('----------------------------------');
+                if (chat) {
+                    leave_room();
+                    _chat = chat;
+                    join_room();
+                    update_messages();
+                    client.emit("opened_chat", c);
+                }
+            });
         }
     ;
 
     // ------------------------------------------------------------
 
-    client.on("open_chat", function(c) {
-        Chat.findOne({
-            _id: c._id,
-            participants: {
-                $in: [client.handshake.user._id],
-                $size: 2,
-            },
-        }, function(err, chat) {
-            if (chat) {
-                leave_room();
-                _chat = chat;
-                join_room();
-                update_messages();
-            }
-        });
-    });
+    client.on("open_chat", open_chat);
+    client.on("update_messages", update_messages);
 
     client.on("close_chat", function() {
         var room = config.get("socket:key_for_private_rooms") + _chat._id;
@@ -87,6 +97,57 @@ module.exports = function(io, client, events) {
             chat.not_read.remove(client.handshake.user);
             chat.save(function() {
                 events.update_new_messages(client.handshake.user._id);
+            });
+        });
+    });
+
+    client.on('add_to_chat', function(d) {
+        Chat.findOne({
+            _id: d.chat_id,
+            $where: 'this.participants.length > 2',
+        }, function(err, chat) {
+            User.findOne({_id: d.person_id}, function(err, user) {
+                if (!user) return;
+
+                if (chat) {
+                    chat.participants.addToSet(user);
+
+                    chat.save(function() {
+                        Chat.findOne({_id: chat._id})
+                            .populate('participants')
+                            .exec(function(err, chat) {
+                                chat.name = '';
+                                chat.participants.forEach(function(u) {
+                                    chat.name += u.name + ' ';
+                                });
+                                chat.name.trim();
+                                chat.save(function() {
+                                    events.notify_friends();
+                                    open_chat(chat);
+                                });
+
+                            });
+                    });
+                } else {
+                    Chat.findOne({_id: _chat.id})
+                        .populate('participants')
+                        .exec(function(err, c) {
+                            chat = new Chat({ name: '' });
+
+                            c.participants.forEach(function(u) {
+                                 chat.name += u.name + ' ';
+                                 chat.participants.addToSet(u);
+                            });
+
+                            chat.name += user.name
+                            chat.participants.addToSet(user);
+
+                            chat.save(function(err, chat) {
+                                events.notify_friends();
+                                open_chat(chat);
+                            });
+                        });
+                }
             });
         });
     });

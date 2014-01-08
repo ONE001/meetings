@@ -12,6 +12,13 @@
                 app.proxy.on("friends", function(friends) {
                     $scope.$apply(function(s) {
                         s.friends = friends;
+                        $scope.participants_status();
+                    });
+                });
+
+                app.proxy.on("chats", function(chats) {
+                    $scope.$apply(function(s) {
+                        s.chats = chats;
                     });
                 });
 

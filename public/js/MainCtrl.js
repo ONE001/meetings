@@ -74,9 +74,7 @@ app.controller("MainCtrl", ["$scope", function($scope) {
         app.proxy.on("user", function(user) {
             console.info("current_user - ", user);
             $scope.$apply(function(s) {
-                if (!user.friends) {
-                    user.friends = {};
-                }
+                if (!user.friends) user.friends = {};
                 s.current_user = user;
             });
         });

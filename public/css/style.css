@@ -2,6 +2,15 @@
     display: none !important;
 }
 
+[draggable] {
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+  -khtml-user-drag: element;
+  -webkit-user-drag: element;
+}
+
 body {
     font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
     padding-top: 70px;
@@ -50,12 +59,12 @@ a {
     margin-left: 10px;
 }
 
-.friends > .list-group-item > div > div.remove-from-friends {
-    margin-right: 10px;
+.friends > .list-group-item > div > div.add-to-chat {
+    cursor: move;
 }
 
-.add-to-friends, .approve-to-friends {
-    color: green;
+.friends > .list-group-item > div > div.remove-from-friends {
+    margin-right: 10px;
 }
 
 .chat {
@@ -85,6 +94,26 @@ a {
     min-height: 100px;
     max-height: 400px;
     overflow: auto;
+    width: 80%;
+    float: left;
+    word-wrap: break-word;
+}
+
+.chat .participants {
+    width: 15%;
+    float: right;
+    margin-left: 10px;
+    border: 1px #ddd solid;
+    padding: 5px;
+    border-radius: 4px;
+}
+
+.chat .participants.dragstart {
+    border: 2px gold dotted;
+}
+
+.chat .participants.dragover {
+    border: 2px green solid;
 }
 
 .chat .messages > div {
@@ -105,36 +134,6 @@ a {
     margin-right: 3px;
 }
 
-#addition_people .modal-body {
-    display: inline-block;
-    width: 100%;
-}
-
-#addition_people .modal-body > div,
-#addition_people .modal-body > button {
-    float: left;
-    margin: 0 10px;
-}
-#addition_people .modal-body > div {
-    min-width: 121px;
-    min-height: 100px;
-    max-height: 300px;
-
-    border-radius: 4px;
-    border: 1px #ddd solid;
-    overflow: auto;
-}
-
-#addition_people .modal-body > div > div {
-    padding: 10px;
-    border-bottom: 1px #ddd solid;
-}
-
-#addition_people .modal-body > div > div.active {
-    background: blue;
-    color: white;
-}
-
 .images_in_chat {
     width: 100%;
 }
@@ -147,6 +146,7 @@ a {
     .mobile-friends {
         width: 100%;
         margin-top: 10px;
+        display: inline-block;
     }
 
     .chat {
@@ -161,6 +161,7 @@ a {
 
 div[call] video {
     width: 300px;
+    float: left;
 }
 
 .offline, .online {

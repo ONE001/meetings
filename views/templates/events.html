@@ -9,8 +9,16 @@
       <li>
         <a href="#" ng-repeat="person in invitations">
           {{ (person.username || person.login) + ' ' + ('wants_add_you' | translate) }}
-          <span ng-click="approve_to_friends(person);" class="approve-to-friends glyphicon glyphicon-ok-sign"></span>
-          <span ng-click="remove_from_friends(person);" class="remove-from-friends glyphicon glyphicon-minus"></span>
+          <span
+             ng-click="approve_to_friends(person);"
+             ng-tooltip="{{ 'approve' | translate }}"
+             class="approve-to-friends glyphicon glyphicon-ok-sign"
+             ></span>
+          <span
+             ng-click="remove_from_friends(person);"
+             ng-tooltip="{{ 'deny' | translate }}"
+             class="remove-from-friends glyphicon glyphicon-minus"
+             ></span>
         </a>
       </li>
     </ul>
