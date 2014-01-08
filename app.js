@@ -10,7 +10,6 @@ server.listen(config.get('port'), function() {
     console.log('Express server listening on port ' + config.get('port'));
 });
 
-app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(express.favicon());
@@ -33,12 +32,12 @@ app.use(express.session({
 
 app.use(require('middleware/loadUser'));
 
-require('routes/index')(app);
+require('routes/index')(app, __dirname);
 app.set('io', require('socket/index')(server));
 
 app.use(function(err, req, res, next) {
     if (app.get("env") === "development") {
-	express.errorHandler()(err, req, res, next);
+        express.errorHandler()(err, req, res, next);
     } else {
 	err = new HttpError(500);
 	res.send(500);

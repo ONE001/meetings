@@ -3,15 +3,15 @@ var User = require('models/user').User,
     AuthError = require('models/user').AuthError
 ;
 
-module.exports = function(app) {
+module.exports = function(app, dir) {
+    var path = dir + '/views';
     app.use(app.router);
 
     app.get('/', function(req, res) {
-        if (!req.session.user) {
-            res.sendfile('views/login.html');
-        } else {
-            res.sendfile('views/index.html');
-        }
+        if (!req.session.user)
+            res.sendfile(path + '/login.html');
+        else
+            res.sendfile(path + '/index.html');
     });
 
     app.post('/', function(req, res, next) {
@@ -41,6 +41,6 @@ module.exports = function(app) {
     });
 
     app.get('/templates/:template', function(req, res) {
-        res.sendfile('views' + req.url);
+        res.sendfile(path + req.url);
     });
 };
