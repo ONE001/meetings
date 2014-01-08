@@ -7,7 +7,7 @@
 
                 element.on("dragstart", function(e) {
                     participants.addClass("dragstart");
-                    e.dataTransfer.setData('friend_id', attrs.additionToChat);
+                    e.dataTransfer.setData('text/plain', attrs.additionToChat);
                     $scope.$apply(function() {
                         $scope.addition = true;
                     });

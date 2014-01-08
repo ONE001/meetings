@@ -76,7 +76,7 @@
                 });
 
                 participants.on("drop", function(e) {
-                    $scope.add_to_chat(e.dataTransfer.getData('friend_id'));
+                    $scope.add_to_chat(e.dataTransfer.getData('text/plain'));
                     if (e.stopPropagation) e.stopPropagation();
                     participants.removeClass("dragstart").removeClass("dragover");
                     $scope.$apply(function() {
