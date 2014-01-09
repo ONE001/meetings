@@ -12,18 +12,25 @@
                 $scope.participants_status = function() {
                     if (!$scope.chat) return;
 
-                    if ($scope.chat.participants && $scope.friends)
-                        $scope.chat.participants.forEach(function(participant) {
+                    $scope.chat.participants.forEach(function(participant) {
+                        if ($scope.current_user && participant._id === $scope.current_user._id) {
+                            participant.online = 1;
+                            return;
+                        }
+
+                        if ($scope.friends)
                             $scope.friends.forEach(function(f) {
                                 if (!f.f || !f.f.friend) return;
-                                if (f.f.friend._id === participant._id || $scope.current_user._id === participant._id)
+                                if (f.f.friend._id === participant._id)
                                     participant.online = f.online;
                             });
-                        });
+                    });
                 };
 
                 app.proxy.on("messages", function(chat) {
                     if (!chat) return;
+
+                    console.log(chat);
 
                     $scope.$apply(function(s) {
                         s.chat.messages = chat.messages;

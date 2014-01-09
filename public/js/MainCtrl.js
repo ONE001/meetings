@@ -3,7 +3,7 @@ app.cache = window.sessionStorage || {};
 app.directive("ngShiftEnter", function () {
     return function($scope, element, attrs) {
         element.bind("keydown", function (event) {
-            if(event.which === 13 && event.shiftKey) {
+            if (event.which === 13 && !event.shiftKey) {
                 $scope.$apply(function () {
                     $scope[attrs.ngShiftEnter](element.val());
                 });
@@ -72,7 +72,6 @@ app.controller("MainCtrl", ["$scope", function($scope) {
 
     this.navbar = function() {
         app.proxy.on("user", function(user) {
-            console.info("current_user - ", user);
             $scope.$apply(function(s) {
                 if (!user.friends) user.friends = {};
                 s.current_user = user;

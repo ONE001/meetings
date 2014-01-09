@@ -18,7 +18,7 @@
         {{message.created_at | date:'HH:mm:ss'}}
         <b>
           {{
-          messages[$index - 1].from._id == message.from._id
+          chat.messages[$index - 1].from._id == message.from._id
           ?
           '...'
           :

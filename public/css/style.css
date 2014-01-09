@@ -37,6 +37,7 @@ a {
 
 .fixed {
     position: fixed;
+    width: inherit;
 }
 
 .friends > a {
