@@ -1,7 +1,8 @@
 var User = require('models/user').User,
     Friends = require('models/friends').Friends,
     Chat = require('models/chat').Chat,
-    config = require('config')
+    config = require('config'),
+    async = require('async')
 ;
 
 module.exports = function(io, client) {
@@ -22,18 +23,28 @@ module.exports = function(io, client) {
 
     // invitations_to_friends
     function update_invitations(user_id) {
-        User.findById(user_id, function(err, user) {
-            if (user.friends) {
-                Friends
-                    .findById(user.friends)
-                    .populate({
-                        path: 'received_invitations',
-                        select: 'username login',
-                    })
-                    .exec(function(err, inv) {
-                        io.sockets.in(room(user_id)).emit('invitations', inv.received_invitations);
-                    });
-            }
+        async.waterfall([
+            function(callback) {
+                User.findById(user_id, callback);
+            },
+            function(user, callback) {
+                if (user.friends) {
+                    Friends
+                        .findById(user.friends)
+                        .populate({
+                            path: 'received_invitations',
+                            select: 'username login',
+                        })
+                        .exec(callback)
+                    ;
+                }
+            },
+        ], function(err, inv) {
+            if (err) return;
+
+            io.sockets
+                .in(room(user_id))
+                .emit('invitations', inv.received_invitations);
         });
     }
 
@@ -54,7 +65,10 @@ module.exports = function(io, client) {
         update_invitations: update_invitations,
         update_new_messages: update_new_messages,
         send: function(user_id, event, data) {
-            io.sockets.in(room(user_id)).emit(event, data);
+            io.sockets
+                .in(room(user_id))
+                .emit(event, data)
+            ;
         },
     };
 };

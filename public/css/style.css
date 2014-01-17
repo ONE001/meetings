@@ -155,7 +155,7 @@ a {
     }
 
     .chat .form-group .form-control {
-        width: 70%;
+        width: 75%;
         float:left;
     }
 }
@@ -180,4 +180,9 @@ div[call] video {
 
 .online {
     background-color: green;
+}
+
+.chat .form-parcel {
+    display: inline-block;
+    width: 100%;
 }

@@ -2,6 +2,7 @@ module.exports = function(io, client, events) {
     var Chat = require('models/chat').Chat,
         User = require('models/user').User,
         config = require('config'),
+        async = require('async'),
         _chat,
         current_room = function() {
             return config.get("socket:key_for_private_rooms") + _chat._id;
@@ -14,26 +15,54 @@ module.exports = function(io, client, events) {
             if (!_chat) return;
             client.leave(current_room());
         },
-        update_messages = function() {
+        update_messages = function(only_last) {
             if (!_chat) return;
 
-            Chat.findOne({_id: _chat._id})
-                .populate({
-                    path: "messages.from",
-                    select: "username login",
-                })
-                .populate({
-                    path: "participants",
-                    select: "username login",
-                })
-                .exec(function(err, chat) {
+            async.waterfall([
+                function(callback) {
+                    Chat.findOne({_id: _chat._id})
+                        .populate({
+                            path: "messages.from",
+                            select: "username login",
+                        })
+                        .populate({
+                            path: "participants",
+                            select: "username login",
+                        })
+                        .exec(callback)
+                    ;
+                },
+                function(chat, callback) {
                     var messages = [], participants = [];
+
                     if (chat) {
                         messages = chat.messages;
                         participants = chat.participants;
                     }
-                    io.sockets.in(current_room()).emit("messages", {messages: messages, participants: participants});
-                });
+
+                    if (only_last) {
+                        io.sockets
+                            .in(current_room())
+                            .emit("received_message", {
+                                msg: messages[messages.length - 1],
+                                chat: {
+                                    _id: _chat._id,
+                                    name: _chat.name,
+                                },
+                            })
+                        ;
+                    } else {
+                        io.sockets
+                            .in(current_room())
+                            .emit("messages", {
+                                messages: messages,
+                                participants: participants
+                            })
+                        ;
+                    }
+                }
+            ]);
+
         },
         open_chat = function(c) {
             Chat.findOne({
@@ -42,7 +71,6 @@ module.exports = function(io, client, events) {
                     $in: [client.handshake.user._id],
                 },
             }, function(err, chat) {
-                console.log('----------------------------------');
                 if (chat) {
                     leave_room();
                     _chat = chat;
@@ -69,8 +97,9 @@ module.exports = function(io, client, events) {
 
         Chat.findOne({_id: _chat._id}, function(err, chat) {
             chat.participants.forEach(function(participant) {
-                if (participant._id !== client.handshake.user._id)
+                if (participant._id !== client.handshake.user._id) {
                     chat.not_read.addToSet(participant);
+                }
             });
 
             setTimeout(function() {
@@ -86,8 +115,8 @@ module.exports = function(io, client, events) {
                 from: client.handshake.user,
             });
 
-            chat.save(function() {
-                update_messages();
+            chat.save(function(err, chat) {
+                update_messages(true);
             });
         });
     });
@@ -102,53 +131,60 @@ module.exports = function(io, client, events) {
     });
 
     client.on('add_to_chat', function(d) {
-        Chat.findOne({
-            _id: d.chat_id,
-            $where: 'this.participants.length > 2',
-        }, function(err, chat) {
-            User.findOne({_id: d.person_id}, function(err, user) {
-                if (!user) return;
+        async.waterfall([
+            function(callback) {
+                Chat.findOne({
+                    _id: d.chat_id,
+                    $where: 'this.participants.length > 2',
+                }, callback);
+            },
+            function(chat, callback) {
+                User.findOne({_id: d.person_id}, function(err, user) {
+                    callback(err, chat, user);
+                });
+            },
+        ], function(err, chat, user) {
+            if (!user) return;
 
-                if (chat) {
-                    chat.participants.addToSet(user);
+            if (chat) {
+                chat.participants.addToSet(user);
 
-                    chat.save(function() {
-                        Chat.findOne({_id: chat._id})
-                            .populate('participants')
-                            .exec(function(err, chat) {
-                                chat.name = '';
-                                chat.participants.forEach(function(u) {
-                                    chat.name += u.name + ' ';
-                                });
-                                chat.name.trim();
-                                chat.save(function() {
-                                    events.notify_friends();
-                                    open_chat(chat);
-                                });
-
-                            });
-                    });
-                } else {
-                    Chat.findOne({_id: _chat.id})
+                chat.save(function() {
+                    Chat.findOne({_id: chat._id})
                         .populate('participants')
-                        .exec(function(err, c) {
-                            chat = new Chat({ name: '' });
-
-                            c.participants.forEach(function(u) {
-                                 chat.name += u.name + ' ';
-                                 chat.participants.addToSet(u);
+                        .exec(function(err, chat) {
+                            chat.name = '';
+                            chat.participants.forEach(function(u) {
+                                chat.name += u.name + ' ';
                             });
-
-                            chat.name += user.name
-                            chat.participants.addToSet(user);
-
-                            chat.save(function(err, chat) {
+                            chat.name.trim();
+                            chat.save(function() {
                                 events.notify_friends();
                                 open_chat(chat);
                             });
+
                         });
-                }
-            });
+                });
+            } else {
+                Chat.findOne({_id: _chat.id})
+                    .populate('participants')
+                    .exec(function(err, c) {
+                        chat = new Chat({ name: '' });
+
+                        c.participants.forEach(function(u) {
+                            chat.name += u.name + ' ';
+                            chat.participants.addToSet(u);
+                        });
+
+                        chat.name += user.name
+                        chat.participants.addToSet(user);
+
+                        chat.save(function(err, chat) {
+                            events.notify_friends();
+                            open_chat(chat);
+                        });
+                    });
+            }
         });
     });
 

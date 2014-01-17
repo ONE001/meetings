@@ -9,8 +9,28 @@
             replace: true,
             templateUrl: "/templates/chat.html",
             link: function($scope, element) {
+                var tag = 0,
+                    hidden,
+                    visibilityChange,
+                    nt = window.webkitNotifications || window.Notification || null
+                ;
+
+                if (typeof document.hidden !== "undefined") {
+                    hidden = "hidden";
+                    visibilityChange = "visibilitychange";
+                } else if (typeof document.mozHidden !== "undefined") {
+                    hidden = "mozHidden";
+                    visibilityChange = "mozvisibilitychange";
+                } else if (typeof document.msHidden !== "undefined") {
+                    hidden = "msHidden";
+                    visibilityChange = "msvisibilitychange";
+                } else if (typeof document.webkitHidden !== "undefined") {
+                    hidden = "webkitHidden";
+                    visibilityChange = "webkitvisibilitychange";
+                }
+
                 $scope.participants_status = function() {
-                    if (!$scope.chat) return;
+                    if (!$scope.chat || !$scope.chat.participants) return;
 
                     $scope.chat.participants.forEach(function(participant) {
                         if ($scope.current_user && participant._id === $scope.current_user._id) {
@@ -29,8 +49,6 @@
 
                 app.proxy.on("messages", function(chat) {
                     if (!chat) return;
-
-                    console.log(chat);
 
                     $scope.$apply(function(s) {
                         s.chat.messages = chat.messages;
@@ -54,6 +72,42 @@
                     });
                 });
 
+                app.proxy.on("received_message", function(data) {
+                    $scope.$apply(function(s) {
+                        s.chat.messages.push(data.msg);
+                    });
+
+                    element.find(".messages").scrollTop(element.find(".messages").prop("scrollHeight"));
+                    app.proxy.emit("read");
+
+                    if (!nt || !document[hidden]) return false;
+
+                    var notification = {
+                        body: data.msg.body,
+                        tag: tag,
+                        icon: null,
+                    };
+
+                    tag += 1;
+
+                    if (nt.createNotification)
+                        notification = nt.createNotification(notification.icon, data.msg.from.login, notification.body);
+                    else
+                        notification = new nt(data.msg.from.login, notification);
+
+                    notification.onclick = function() {
+                        notification.close();
+                        $(window).focus();
+                        $scope.open_chat(data.chat);
+                        return true;
+                    };
+
+                    if (notification.show) {
+                        notification.show();
+                        setTimeout(function() { notification.close(); }, 5000);
+                    }
+                });
+
                 $scope.send_message = function(message) {
                     app.proxy.emit("new_message", message);
                     element.find("textarea").val('').focus();
@@ -63,7 +117,6 @@
                     $scope.full_screen = !$scope.full_screen;
                     app.cache["full_screen"] = $scope.full_screen;
                 };
-
 
                 var participants = element.find(".participants");
 
@@ -89,6 +142,7 @@
                     $scope.$apply(function() {
                         $scope.addition = false;
                     });
+                    return false;
                 });
 
                 $scope.add_to_chat = function(friend_id) {

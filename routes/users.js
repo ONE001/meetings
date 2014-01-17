@@ -129,6 +129,7 @@ module.exports = function(io, client, events) {
                 });
             }
         ], function(err, user1, user2) {
+            if (err) return;
             update();
             client.emit('removed-from-friends', true);
         });
