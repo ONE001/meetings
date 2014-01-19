@@ -29,7 +29,7 @@ module.exports = function(io, client, events) {
                         $in: [client.handshake.user._id],
                     },
                     $where: 'this.participants.length > 2',
-                }, '_id name', function(err, chats) {
+                }, '_id name not_read', function(err, chats) {
                     client.emit('chats', chats);
                 });
             })

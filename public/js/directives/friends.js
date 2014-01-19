@@ -10,6 +10,7 @@
             templateUrl: "/templates/friends.html",
             link: function($scope, element) {
                 app.proxy.on("friends", function(friends) {
+                    console.info("updated friends");
                     $scope.$apply(function(s) {
                         s.friends = friends;
                         $scope.participants_status();

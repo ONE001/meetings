@@ -23,19 +23,4 @@
       </li>
     </ul>
   </li> <!-- dropdown -->
-
-  <li class="dropdown new_messages"  ng-hide="!unread_chats.length">
-    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-      <span class="label label-warning">{{ unread_chats.length }}</span>
-      <b class="caret"></b>
-    </a>
-
-    <ul class="dropdown-menu">
-      <li>
-        <a href="#" ng-repeat="chat in unread_chats" ng-click="open_chat(chat)">
-          {{ ('unread messages in chat' | translate) + ' "' + chat.name + '"' }}
-        </a>
-      </li>
-    </ul>
-  </li> <!-- dropdown -->
 </ul>

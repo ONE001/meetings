@@ -12,12 +12,21 @@ module.exports = function(io, client) {
 
     client.join(room(client.handshake.user._id));
 
-    function notify_friends()
+    function update(user_id)
+    {
+        io.sockets.in(room(user_id)).emit('need_update');
+    }
+
+    function notify_friends(friends)
     {
         Friends.approvedById(client.handshake.user.friends, function(approved) {
-            approved.forEach(function(f) {
-                io.sockets.in(room(f.friend._id)).emit('need_update');
-            });
+            if (!friends)
+                approved.forEach(function(f) { update(f.friend._id); });
+            else
+                approved.forEach(function(f) {
+                    if (friends.indexOf(f.friend._id) != -1)
+                        update(f.friend._id);
+                });
         });
     }
 
@@ -61,6 +70,7 @@ module.exports = function(io, client) {
 
     return {
         room: room,
+        update: update,
         notify_friends: notify_friends,
         update_invitations: update_invitations,
         update_new_messages: update_new_messages,

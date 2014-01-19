@@ -1,30 +1,42 @@
 app.cache = window.sessionStorage || {};
 
-app.directive("ngShiftEnter", function () {
-    return function($scope, element, attrs) {
-        element.bind("keydown", function (event) {
-            if (event.which === 13 && !event.shiftKey) {
-                $scope.$apply(function () {
-                    $scope[attrs.ngShiftEnter](element.val());
-                });
-                event.preventDefault();
-            }
-        });
-    };
-});
+app
+    .directive("ngShiftEnter", function () {
+        return function($scope, element, attrs) {
+            element.bind("keydown", function (event) {
+                if (event.which === 13 && !event.shiftKey) {
+                    $scope.$apply(function() {
+                        $scope[attrs.ngShiftEnter]();
+                    });
+                    event.preventDefault();
+                }
+            });
+        };
+    })
 
-app.directive("ngTooltip", function() {
-    return function($scope, element, attrs) {
-        element.attr("data-toogle", "tooltip");
-        element.attr("data-placement", "bottom");
+    .directive("ngTooltip", function() {
+        return function($scope, element, attrs) {
+            element.attr("data-toogle", "tooltip");
+            element.attr("data-placement", "bottom");
 
-        attrs.$observe("ngTooltip", function() {
-            element.attr("data-original-title", attrs["ngTooltip"]);
-        });
+            attrs.$observe("ngTooltip", function() {
+                element.attr("data-original-title", attrs["ngTooltip"]);
+            });
 
-        element.tooltip();
-    };
-});
+            element.tooltip();
+        };
+    })
+    .directive('ngFocus', function($timeout) {
+        return {
+            link: function ($scope, element, attrs) {
+                console.log(attrs.ngFocus);
+                $scope.$watch(attrs.ngFocus, function (val) {
+                    if (val) $timeout(function() { element.focus(); });
+                }, true);
+            },
+        };
+    });
+;
 
 app
     .filter('newlines', function() {

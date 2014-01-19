@@ -2,8 +2,8 @@
   <span class="title">{{ chat.name }}</span>
 
   <div class="control-panel">
-    <div class="glyphicon glyphicon-fullscreen" ng-click="expand_full_screen();" ng-tooltip="{{ 'full screen' | translate }}"></div>
-    <div class="glyphicon glyphicon-earphone" ng-click="call();" ng-tooltip="{{ 'call' | translate }}"></div>
+    <div class="fa fa-arrows-alt" ng-click="expand_full_screen();" ng-tooltip="{{ 'full screen' | translate }}"></div>
+    <div class="fa fa-phone" ng-click="call();" ng-tooltip="{{ 'call' | translate }}"></div>
   </div>
 
   <hr/>
@@ -31,18 +31,18 @@
   </div>
 
   <div class="participants">
-    <p ng-repeat="participant in chat.participants">
+    <div ng-repeat="participant in chat.participants">
       <span ng-class="{'online': participant.online, 'offline': !participant.online}"></span>
       {{ participant.username || participant.login }}
-    </p>
+    </div>
   </div>
 
   <hr style="width:100%;float:left;"/>
 
   <form class="form-inline form-parcel" role="form">
     <div class="form-group ng-class: {'has-success': new_message.length > 0}">
-      <textarea class="form-control" ng-shift-enter="send_message" ng-model="new_message" rows="3"></textarea>
-      <button type="button" ng-click="send_message(new_message)" class="btn btn-default btn-lg">
+      <textarea class="form-control" ng-focus="new_message_focus" ng-shift-enter="send_message" ng-model="new_message" rows="3"></textarea>
+      <button type="button" ng-click="send_message()" class="btn btn-default btn-lg">
         {{ 'Send' | translate }}
         <span class="glyphicon glyphicon-send"></span>
       </button>

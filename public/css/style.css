@@ -2,6 +2,10 @@
     display: none !important;
 }
 
+body {
+    min-width: 430px;
+}
+
 [draggable] {
   -moz-user-select: none;
   -khtml-user-select: none;
@@ -35,6 +39,10 @@ a {
     padding-bottom: 40px;
 }
 
+.friends .unread {
+    color: orange;
+}
+
 .fixed {
     position: fixed;
     width: inherit;
@@ -44,6 +52,10 @@ a {
     cursor: default;
     float: left;
     width: 100%;
+}
+
+.friends > .list-group-item {
+    cursor: default;
 }
 
 .friends > .list-group-item.active {
@@ -92,10 +104,10 @@ a {
 }
 
 .chat .messages {
-    min-height: 100px;
+    min-height: 400px;
     max-height: 400px;
     overflow: auto;
-    width: 80%;
+    width: 82%;
     float: left;
     word-wrap: break-word;
 }
@@ -105,8 +117,12 @@ a {
     float: right;
     margin-left: 10px;
     border: 1px #ddd solid;
-    padding: 5px;
     border-radius: 4px;
+    cursor: default;
+}
+
+.chat .participants > div {
+    padding: 3px;
 }
 
 .chat .participants.dragstart {

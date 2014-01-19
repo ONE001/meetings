@@ -48,6 +48,7 @@
                 };
 
                 app.proxy.on("messages", function(chat) {
+                    console.info("updated messages");
                     if (!chat) return;
 
                     $scope.$apply(function(s) {
@@ -62,17 +63,21 @@
 
                 $scope.open_chat = function(c) {
                     app.proxy.emit("open_chat", c);
+                    $scope.new_message_focus = false;
                 };
 
                 app.proxy.on("opened_chat", function(chat) {
-                    $scope.$apply(function() {
+                    console.info("openned chat");
+                    $scope.$apply(function(s) {
                         app.cache["chat"] = JSON.stringify(chat);
-                        $scope.chat = chat;
-                        app.proxy.emit("need_update");
+                        s.chat = chat;
+                        s.new_message_focus = true;
+                        //app.proxy.emit("need_update");
                     });
                 });
 
                 app.proxy.on("received_message", function(data) {
+                    console.info("received message");
                     $scope.$apply(function(s) {
                         s.chat.messages.push(data.msg);
                     });
@@ -108,9 +113,11 @@
                     }
                 });
 
-                $scope.send_message = function(message) {
-                    app.proxy.emit("new_message", message);
-                    element.find("textarea").val('').focus();
+                $scope.send_message = function() {
+                    if ($scope.new_message === '') return;
+                    app.proxy.emit("new_message", $scope.new_message);
+                    $scope.new_message = '';
+                    $scope.new_message_focus = true;
                 };
 
                 $scope.expand_full_screen = function() {
@@ -161,5 +168,4 @@
             }, // link
         };
     });
-
 }());

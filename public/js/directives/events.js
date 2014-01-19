@@ -16,11 +16,6 @@
                     s.invitations = invitations;
                 }); });
 
-                // not_read_messages
-                app.proxy.on("unread_messages", function(chats) { $scope.$apply(function(s) {
-                    s.unread_chats = chats;
-                }) });
-
                 dfd.resolve();
             }, // link
         };

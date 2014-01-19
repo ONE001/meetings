@@ -44,7 +44,7 @@ schema.statics.approvedById = function(_id, callback) {
         })
         .populate({
             path: 'approved.chat',
-            select: '_id name',
+            select: '_id name not_read',
         })
         .exec(function(err, friends) {
             if (friends && friends.approved)

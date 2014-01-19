@@ -62,7 +62,6 @@ module.exports = function(io, client, events) {
                     }
                 }
             ]);
-
         },
         open_chat = function(c) {
             Chat.findOne({
@@ -71,17 +70,15 @@ module.exports = function(io, client, events) {
                     $in: [client.handshake.user._id],
                 },
             }, function(err, chat) {
-                if (chat) {
-                    leave_room();
-                    _chat = chat;
-                    join_room();
-                    update_messages();
-                    client.emit("opened_chat", c);
-                }
+                if (!chat || err) return;
+                leave_room();
+                _chat = chat;
+                join_room();
+                update_messages();
+                client.emit("opened_chat", c);
             });
         }
     ;
-
     // ------------------------------------------------------------
 
     client.on("open_chat", open_chat);
@@ -102,14 +99,6 @@ module.exports = function(io, client, events) {
                 }
             });
 
-            setTimeout(function() {
-                Chat.findOne({_id: _chat._id}, function(err, chat) {
-                    chat.not_read.forEach(function(user_id) {
-                        events.update_new_messages(user_id);
-                    });
-                });
-            }, 1500);
-
             chat.messages.push({
                 body: message,
                 from: client.handshake.user,
@@ -117,6 +106,13 @@ module.exports = function(io, client, events) {
 
             chat.save(function(err, chat) {
                 update_messages(true);
+                setTimeout(function() {
+                    if (!chat) return;
+                    Chat.findOne({_id: chat._id}, function(err, chat) {
+                        if (err) return;
+                        events.notify_friends(chat.not_read);
+                    });
+                }, 500);
             });
         });
     });
@@ -125,7 +121,7 @@ module.exports = function(io, client, events) {
         Chat.findOne({_id: _chat._id}, function(err, chat) {
             chat.not_read.remove(client.handshake.user);
             chat.save(function() {
-                events.update_new_messages(client.handshake.user._id);
+                events.update(client.handshake.user._id);
             });
         });
     });
