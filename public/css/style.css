@@ -123,6 +123,15 @@ a {
 
 .chat .participants > div {
     padding: 3px;
+
+    -webkit-transition: all 0.2s ease;
+     -moz-transition: all 0.2s ease;
+     -o-transition: all 0.2s ease;
+     transition: all 0.2s ease;
+}
+.chat .participants > div:hover {
+    background-color: #005580;
+    color: white;
 }
 
 .chat .participants.dragstart {

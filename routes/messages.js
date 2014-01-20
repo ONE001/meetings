@@ -1,6 +1,7 @@
 module.exports = function(io, client, events) {
     var Chat = require('models/chat').Chat,
         User = require('models/user').User,
+        Friends = require('models/friends').Friends,
         config = require('config'),
         async = require('async'),
         _chat,
@@ -87,6 +88,25 @@ module.exports = function(io, client, events) {
     client.on("close_chat", function() {
         var room = config.get("socket:key_for_private_rooms") + _chat._id;
         client.leave(room);
+    });
+
+    client.on("get_chat_by_friend_id", function(friend_id) {
+        async.waterfall([
+            function(callback) {
+                User.findById(client.handshake.user._id)
+                    .populate('friends')
+                    .exec(callback)
+                ;
+            },
+            function(user, callback) {
+                if (!user.friends) return null;
+                Friends.approvedFriendById(user.friends._id, friend_id, callback);
+            },
+        ], function(err, friend) {
+            if (err) return;
+            var chat = friend ? friend.chat : null;
+            client.emit("got_chat", chat);
+        });
     });
 
     client.on("new_message", function(message) {

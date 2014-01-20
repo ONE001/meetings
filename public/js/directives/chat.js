@@ -62,8 +62,14 @@
                 });
 
                 $scope.open_chat = function(c) {
+                    if (!c || ($scope.chat && c._id === $scope.chat._id)) return;
                     app.proxy.emit("open_chat", c);
                     $scope.new_message_focus = false;
+                };
+
+                $scope.get_chat_and_open_by_friend_id = function(friend_id) {
+                    if (!friend_id || friend_id === $scope.current_user._id) return;
+                    app.proxy.emit("get_chat_by_friend_id", friend_id);
                 };
 
                 app.proxy.on("opened_chat", function(chat) {
@@ -74,6 +80,10 @@
                         s.new_message_focus = true;
                         //app.proxy.emit("need_update");
                     });
+                });
+
+                app.proxy.on("got_chat", function(chat) {
+                    $scope.open_chat(chat);
                 });
 
                 app.proxy.on("received_message", function(data) {
